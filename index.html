@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Sony Alpha Community</title>
+    <meta name="description" content="The official Sony Alpha photography community." />
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
+    <!-- Material Symbols -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+
+    <!-- Splash Screen -->
+    <div id="splash-screen" class="screen active">
+        <div class="logo">&alpha;</div>
+        <div class="brand">Alpha Community</div>
+    </div>
+
+    <!-- Main App Container -->
+    <div id="app-container" class="hidden">
+        
+        <!-- Header -->
+        <header id="top-bar">
+            <button id="menu-btn" class="icon-btn">
+                <span class="material-symbols-outlined">menu</span>
+            </button>
+            <div class="header-logo" style="cursor:pointer;" onclick="document.querySelector('.nav-item[data-target=\'discover\']').click()">&alpha;</div>
+            <button id="notif-btn" class="icon-btn" style="position: relative;">
+                <span class="material-symbols-outlined">notifications</span>
+                <span class="notif-badge">3</span>
+            </button>
+        </header>
+
+        <!-- Dynamic Content Area -->
+        <main id="main-content">
+            <!-- Templates will be injected here -->
+        </main>
+
+        <!-- Floating Pill Bottom Navigation -->
+        <nav id="bottom-nav">
+            <a href="#" class="nav-item active" data-target="discover">
+                <div class="nav-pill">
+                    <span class="material-symbols-outlined">explore</span>
+                    <span class="nav-label">Discover</span>
+                </div>
+            </a>
+            <a href="#" class="nav-item" data-target="events">
+                <div class="nav-pill">
+                    <span class="material-symbols-outlined">emoji_events</span>
+                    <span class="nav-label">Events</span>
+                </div>
+            </a>
+            <a href="#" class="nav-item" data-target="profile">
+                <div class="nav-pill">
+                    <span class="material-symbols-outlined">account_circle</span>
+                    <span class="nav-label">Profile</span>
+                </div>
+            </a>
+        </nav>
+
+        <!-- FAB Speed Dial -->
+        <div id="fab-container">
+            <!-- Speed Dial Actions (above the button) -->
+            <div class="fab-actions">
+                <div class="fab-action-item" id="fab-action-gallery">
+                    <span class="fab-action-label">Gallery</span>
+                    <button class="fab-action-btn" id="fab-btn-gallery">
+                        <span class="material-symbols-outlined">photo_library</span>
+                    </button>
+                </div>
+                <div class="fab-action-item" id="fab-action-camera">
+                    <span class="fab-action-label">Camera</span>
+                    <button class="fab-action-btn" id="fab-btn-camera">
+                        <span class="material-symbols-outlined">photo_camera</span>
+                    </button>
+                </div>
+                <div class="fab-action-item" id="fab-action-write">
+                    <span class="fab-action-label">Write Post</span>
+                    <button class="fab-action-btn" id="fab-btn-write">
+                        <span class="material-symbols-outlined">edit</span>
+                    </button>
+                </div>
+            </div>
+            <!-- Main FAB Button -->
+            <button id="fab-upload">
+                <span class="material-symbols-outlined">add</span>
+            </button>
+        </div>
+        <!-- FAB Backdrop -->
+        <div id="fab-backdrop"></div>
+
+        <!-- Side Drawer -->
+        <div id="side-drawer" class="drawer glass-panel">
+            <div class="drawer-header">
+                <h2>&alpha; Menu</h2>
+                <button id="close-drawer-btn" class="icon-btn">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+            <div class="drawer-user-info" style="padding: 20px; border-bottom: 1px solid var(--glass-border); display: flex; align-items: center; gap: 15px;">
+                <img src="https://images.unsplash.com/photo-1527980965255-d3b416303d12?auto=format&fit=crop&w=80&q=80" alt="User" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover; border: 2px solid var(--alpha-orange);" />
+                <div>
+                    <div style="font-weight: 600; font-size: 1.1rem; color: var(--text-primary);">Alex Mercer</div>
+                    <div style="font-size: 0.85rem; color: var(--text-secondary);">@alex.alpha</div>
+                </div>
+            </div>
+            <ul class="drawer-menu">
+                <li data-target="ask-expert"><span class="material-symbols-outlined">psychology</span> Ask the Expert</li>
+                <li data-target="support"><span class="material-symbols-outlined">support_agent</span> Support</li>
+                <li data-target="products"><span class="material-symbols-outlined">photo_camera</span> Products</li>
+                <li data-target="store-locator"><span class="material-symbols-outlined">location_on</span> Store Locator</li>
+                <li data-target="settings"><span class="material-symbols-outlined">settings</span> Settings</li>
+            </ul>
+        </div>
+        <div id="drawer-overlay"></div>
+
+        <!-- Full Screen Modal for Details & Uploads -->
+        <div id="full-modal" class="modal">
+            <div class="modal-content">
+                <!-- Injected dynamically -->
+            </div>
+        </div>
+
+        <!-- Toast Notification -->
+        <div id="toast" class="toast hidden">
+            <span class="material-symbols-outlined toast-icon">info</span>
+            <span class="toast-message">Action completed.</span>
+        </div>
+
+    </div>
+
+
+    <!-- ============================================== -->
+    <!-- TEMPLATES -->
+    <!-- ============================================== -->
+
+    <!-- DISCOVER TAB -->
+    <template id="tpl-discover">
+        <div class="view-discover fade-in" style="padding-bottom: 100px;">
+            <section class="hero-banner" onclick="window.openPhotoDetail(1)">
+                <img src="https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?auto=format&fit=crop&w=800&q=80" alt="Hero Photography" class="hero-img">
+                <div class="hero-content glass-card">
+                    <div class="hero-tag">
+                        <span class="material-symbols-outlined" style="font-size:0.85rem;">auto_awesome</span>
+                        Shot of the Week
+                    </div>
+                    <h1>Capture the<br>Unseen.</h1>
+                    <p>Alpha A7R V &nbsp;·&nbsp; FE 35mm F1.4 GM &nbsp;·&nbsp; @johndoe</p>
+                </div>
+            </section>
+
+            <!-- Featured Photographers -->
+            <div class="story-row">
+                <div class="story-item" onclick="window.showToast('Opening @marcus.lens')">
+                    <div class="story-ring"><img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=100&q=80" class="story-avatar" alt="Marcus"></div>
+                    <span class="story-name">Marcus</span>
+                </div>
+                <div class="story-item" onclick="window.showToast('Opening @elena.wood')">
+                    <div class="story-ring"><img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80" class="story-avatar" alt="Elena"></div>
+                    <span class="story-name">Elena</span>
+                </div>
+                <div class="story-item" onclick="window.showToast('Opening @david.hunt')">
+                    <div class="story-ring"><img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=100&q=80" class="story-avatar" alt="David"></div>
+                    <span class="story-name">David</span>
+                </div>
+                <div class="story-item" onclick="window.showToast('Opening @sarah.chen')">
+                    <div class="story-ring"><img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=100&q=80" class="story-avatar" alt="Sarah"></div>
+                    <span class="story-name">Sarah</span>
+                </div>
+                <div class="story-item" onclick="window.showToast('Opening @kenji.sato')">
+                    <div class="story-ring"><img src="https://images.unsplash.com/photo-1527980965255-d3b416303d12?auto=format&fit=crop&w=100&q=80" class="story-avatar" alt="Kenji"></div>
+                    <span class="story-name">Kenji</span>
+                </div>
+            </div>
+                <div class="category active" data-filter="All">All</div>
+                <div class="category" data-filter="Wildlife">Wildlife</div>
+                <div class="category" data-filter="Portrait">Portrait</div>
+                <div class="category" data-filter="Street">Street</div>
+                <div class="category" data-filter="Cinematic">Cinematic</div>
+                <div class="category" data-filter="Landscape">Landscape</div>
+            </section>
+
+            <div class="section-label">
+                <span>Community Feed</span>
+                <div class="sort-dropdown">
+                    <button class="sort-btn glass-btn" id="sort-toggle">
+                        <span class="material-symbols-outlined" style="font-size: 1rem;">sort</span>
+                        <span id="current-sort">Trending</span>
+                    </button>
+                    <div class="sort-menu hidden glass-panel" id="sort-menu">
+                        <div class="sort-option active" data-sort="trending">Trending</div>
+                        <div class="sort-option" data-sort="latest">Latest</div>
+                        <div class="sort-option" data-sort="likes">Most Liked</div>
+                    </div>
+                </div>
+            </div>
+            
+            <section class="feed-grid" id="discover-feed">
+                <!-- Feed items generated by JS -->
+            </section>
+        </div>
+    </template>
+
+    <!-- EVENTS TAB -->
+    <template id="tpl-events">
+        <div class="view-events fade-in" style="padding-bottom: 100px;">
+            <div class="page-header">
+                <h2>Community Events</h2>
+                <p>Join challenges, contests, and workshops.</p>
+            </div>
+            
+            <div class="categories-scroll" style="padding-top: 0;">
+                <div class="category active" data-event-filter="All">All Events</div>
+                <div class="category" data-event-filter="Contest">Contests</div>
+                <div class="category" data-event-filter="Workshop">Workshops</div>
+                <div class="category" data-event-filter="Meetup">Meetups</div>
+            </div>
+
+            <div class="event-cards" id="events-list">
+                <div class="event-card glass-panel" data-type="Contest" onclick="openEventDetail('contest')">
+                    <div class="event-img-wrap">
+                        <img src="https://images.unsplash.com/photo-1542038784456-1ea8e935640e?auto=format&fit=crop&w=600&q=80" alt="Event">
+                        <div class="event-badge">Contest</div>
+                    </div>
+                    <div class="event-info">
+                        <h3>Urban Lights Challenge</h3>
+                        <p>Win a new FE 50mm F1.2 GM lens. Submit your best night street photography.</p>
+                        <button class="btn-primary" onclick="event.stopPropagation(); window.showToast('Registration started');">Register Now</button>
+                    </div>
+                </div>
+                <div class="event-card glass-panel" data-type="Workshop" onclick="openEventDetail('workshop')">
+                    <div class="event-img-wrap">
+                        <img src="https://images.unsplash.com/photo-1478147424096-e61b17b2b2b4?auto=format&fit=crop&w=600&q=80" alt="Event">
+                        <div class="event-badge workshop">Workshop</div>
+                    </div>
+                    <div class="event-info">
+                        <h3>Mastering Portrait Lighting</h3>
+                        <p>Join Alpha Artisan Jane Doe for a masterclass on studio lighting.</p>
+                        <button class="btn-secondary glass-btn" onclick="event.stopPropagation(); window.openEventDetail('workshop');">Learn More</button>
+                    </div>
+                </div>
+                <div class="event-card glass-panel" data-type="Meetup" onclick="window.showToast('Event details coming soon')">
+                    <div class="event-img-wrap">
+                        <img src="https://images.unsplash.com/photo-1511895426328-dc8714191300?auto=format&fit=crop&w=600&q=80" onerror="this.src='https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?auto=format&fit=crop&w=600&q=80'" alt="Event">
+                        <div class="event-badge" style="background: var(--text-tertiary);">Meetup</div>
+                    </div>
+                    <div class="event-info">
+                        <h3>Tokyo Street Walk</h3>
+                        <p>A casual photowalk around Shibuya. Bring any Alpha camera.</p>
+                        <button class="btn-secondary glass-btn" onclick="event.stopPropagation(); window.showToast('You joined the meetup!');">Join</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <!-- PROFILE TAB -->
+    <template id="tpl-profile">
+        <div class="view-profile fade-in" style="padding-bottom: 100px;">
+            <div class="profile-header glass-panel" style="margin: 20px; border-radius: var(--border-radius-lg);">
+                <div class="profile-actions-top" style="position: absolute; right: 20px; top: 20px;">
+                    <button class="icon-btn" onclick="window.loadView('settings')"><span class="material-symbols-outlined">settings</span></button>
+                </div>
+                <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=200&q=80" alt="Profile Picture" class="profile-pic">
+                <h2>Alex Mercer</h2>
+                <p class="bio">Visual storyteller. Sony Alpha Artisan. Capturing the essence of street culture.</p>
+                
+                <div class="profile-actions" style="display: flex; gap: 10px; margin-bottom: 16px;">
+                    <button class="btn-secondary glass-btn" style="padding: 6px 16px; font-size: 0.85rem; width: auto;" onclick="window.openEditProfile()">Edit Profile</button>
+                    <button class="btn-secondary glass-btn" style="padding: 6px 16px; font-size: 0.85rem; width: auto;" onclick="window.showToast('Link copied to clipboard!')">Share</button>
+                </div>
+
+                <div class="stats">
+                    <div class="stat" style="cursor:pointer" onclick="window.showToast('245 total posts')"><strong>245</strong> Posts</div>
+                    <div class="stat" style="cursor:pointer" onclick="window.showToast('1,200 followers')"><strong>1.2k</strong> Followers</div>
+                    <div class="stat" style="cursor:pointer" onclick="window.showToast('340 following')"><strong>340</strong> Following</div>
+                </div>
+                <div class="gear-list">
+                    <span class="glass-btn" onclick="window.openGearSearch('Sony Alpha 7 IV')">A7 IV</span>
+                    <span class="glass-btn" onclick="window.openGearSearch('FE 24-70mm F2.8 GM')">FE 24-70mm F2.8 GM</span>
+                    <span class="glass-btn" onclick="window.openGearSearch('FE 85mm F1.4 GM')">FE 85mm F1.4 GM</span>
+                    <span class="glass-btn" onclick="window.openGearSearch('Sony FE 35mm')">FE 35mm F1.8</span>
+                </div>
+            </div>
+            <div class="profile-tabs">
+                <div class="tab active" data-profile-tab="uploads">My Uploads</div>
+                <div class="tab" data-profile-tab="saved">Saved</div>
+                <div class="tab" data-profile-tab="events">Events</div>
+            </div>
+            <div class="feed-grid mini" id="profile-feed"></div>
+            <div id="profile-empty-state" class="hidden" style="padding: 40px 20px; text-align: center; color: var(--text-secondary);">
+                <span class="material-symbols-outlined" style="font-size: 3rem; margin-bottom: 10px; opacity: 0.5;">folder_open</span>
+                <p>Nothing here yet.</p>
+            </div>
+        </div>
+    </template>
+
+    <!-- ASK EXPERT -->
+    <template id="tpl-ask-expert">
+        <div class="view-page fade-in" style="padding-bottom: 120px;">
+            <div class="page-header glass-panel" style="margin-top: 10px;">
+                <h2>Ask the Expert</h2>
+                <p>Get personalized advice from Alpha Pros.</p>
+            </div>
+            <div style="padding: 20px;">
+                <h3 style="margin-bottom: 15px;">Select a Topic</h3>
+                <div style="display: flex; flex-direction: column; gap: 12px;">
+                    <div class="event-card glass-panel" style="padding: 15px; display: flex; align-items: center; gap: 15px; cursor: pointer;" onclick="window.showToast('Connecting to Gear Expert...')">
+                        <span class="material-symbols-outlined" style="color: var(--alpha-orange); font-size: 2rem;">photo_camera</span>
+                        <div>
+                            <div style="font-weight: 600; font-size: 1.1rem;">Camera & Lens Advice</div>
+                            <div style="color: var(--text-secondary); font-size: 0.85rem;">Find the perfect gear for your style.</div>
+                        </div>
+                    </div>
+                    <div class="event-card glass-panel" style="padding: 15px; display: flex; align-items: center; gap: 15px; cursor: pointer;" onclick="window.showToast('Connecting to Editing Pro...')">
+                        <span class="material-symbols-outlined" style="color: var(--accent-blue); font-size: 2rem;">edit</span>
+                        <div>
+                            <div style="font-weight: 600; font-size: 1.1rem;">Post-Processing Help</div>
+                            <div style="color: var(--text-secondary); font-size: 0.85rem;">Tips on Lightroom, Capture One, etc.</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="glass-panel" style="margin-top: 30px; padding: 20px; border-radius: var(--border-radius-md);">
+                    <h3 style="margin-bottom: 15px;">Ask a Quick Question</h3>
+                    <textarea id="expert-question" class="glass-input" rows="4" placeholder="Type your photography question here..." style="width: 100%; border-radius: var(--border-radius-sm); padding: 15px; margin-bottom: 15px; resize: none;"></textarea>
+                    <button class="btn-primary" style="width: 100%;" onclick="const q = document.getElementById('expert-question'); if(q.value.trim() === '') { window.showToast('Please type a question first!'); return; } window.showToast('Submitting...'); setTimeout(() => { window.showToast('Question submitted! An expert will reply soon.'); q.value=''; }, 1500);">Submit Question</button>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <!-- SUPPORT -->
+    <template id="tpl-support">
+        <div class="view-page fade-in" style="padding-bottom: 120px;">
+            <div class="page-header glass-panel" style="margin-top: 10px;">
+                <h2>Support Center</h2>
+                <p>We're here to help you.</p>
+            </div>
+            <div style="padding: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <div class="glass-panel" style="padding: 20px; border-radius: var(--border-radius-md); text-align: center; cursor: pointer;" onclick="window.showToast('Connecting to Live Agent...')">
+                    <span class="material-symbols-outlined" style="font-size: 2.5rem; color: var(--alpha-orange); margin-bottom: 10px;">chat</span>
+                    <div style="font-weight: 600;">Live Chat</div>
+                </div>
+                <div class="glass-panel" style="padding: 20px; border-radius: var(--border-radius-md); text-align: center; cursor: pointer;" onclick="window.showToast('Calling +1-800-SONY-HELP...')">
+                    <span class="material-symbols-outlined" style="font-size: 2.5rem; color: var(--accent-blue); margin-bottom: 10px;">call</span>
+                    <div style="font-weight: 600;">Call Us</div>
+                </div>
+                <div class="glass-panel" style="padding: 20px; border-radius: var(--border-radius-md); text-align: center; cursor: pointer;" onclick="window.showToast('Opening WhatsApp...')">
+                    <span class="material-symbols-outlined" style="font-size: 2.5rem; color: #25D366; margin-bottom: 10px;">forum</span>
+                    <div style="font-weight: 600;">WhatsApp</div>
+                </div>
+                <div class="glass-panel" style="padding: 20px; border-radius: var(--border-radius-md); text-align: center; cursor: pointer;" onclick="window.showToast('Opening Issue Form...')">
+                    <span class="material-symbols-outlined" style="font-size: 2.5rem; color: var(--error-red); margin-bottom: 10px;">report_problem</span>
+                    <div style="font-weight: 600;">Report Issue</div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <!-- PRODUCTS -->
+    <template id="tpl-products">
+        <div class="view-page fade-in" style="padding-bottom: 120px;">
+            <div class="page-header" style="padding-bottom: 5px;">
+                <h2>Alpha Products</h2>
+                <p>Explore the full Sony Alpha ecosystem.</p>
+            </div>
+            <div class="categories-scroll" style="padding-top: 0;">
+                <div class="category active" data-prod-filter="Cameras">Cameras</div>
+                <div class="category" data-prod-filter="Lenses">Lenses</div>
+                <div class="category" data-prod-filter="Cinema">Cinema Line</div>
+                <div class="category" data-prod-filter="Accessories">Accessories</div>
+            </div>
+            <div id="products-grid" style="padding: 0 16px 20px; display: flex; flex-direction: column; gap: 16px;">
+                <!-- Cameras -->
+                <div class="product-card glass-panel" data-prod-type="Cameras" style="border-radius: var(--border-radius-md); overflow: hidden; cursor:pointer;" onclick="window.showToast('Viewing Alpha 1 details')">
+                    <div style="position:relative; height: 160px; overflow:hidden;">
+                        <img src="https://images.unsplash.com/photo-1606986628253-1be1f3264bce?auto=format&fit=crop&w=600&q=80" style="width:100%; height:100%; object-fit:cover;">
+                        <div style="position:absolute; top:10px; left:10px; background:var(--alpha-orange); color:white; padding:3px 10px; border-radius:4px; font-size:0.75rem; font-weight:700;">FLAGSHIP</div>
+                    </div>
+                    <div style="padding: 15px; display:flex; justify-content:space-between; align-items:center;">
+                        <div>
+                            <h3 style="font-size:1.15rem; margin-bottom:4px;">Sony Alpha 1</h3>
+                            <p style="color:var(--text-secondary); font-size:0.82rem;">50.1MP · 30fps · 8K Video</p>
+                        </div>
+                        <div style="text-align:right;">
+                            <div style="font-weight:700; color:var(--alpha-orange); font-size:1.1rem; margin-bottom:8px;">$6,499</div>
+                            <button class="btn-primary" style="padding:6px 14px; font-size:0.8rem; width:auto;" onclick="event.stopPropagation(); window.showToast('Added to cart!')">Add to Cart</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="product-card glass-panel" data-prod-type="Cameras" style="border-radius: var(--border-radius-md); overflow: hidden; cursor:pointer;" onclick="window.showToast('Viewing Alpha 7R V details')">
+                    <div style="position:relative; height: 160px; overflow:hidden;">
+                        <img src="https://images.unsplash.com/photo-1580674684081-7617fbf3d745?auto=format&fit=crop&w=600&q=80" style="width:100%; height:100%; object-fit:cover;">
+                    </div>
+                    <div style="padding: 15px; display:flex; justify-content:space-between; align-items:center;">
+                        <div>
+                            <h3 style="font-size:1.15rem; margin-bottom:4px;">Alpha 7R V</h3>
+                            <p style="color:var(--text-secondary); font-size:0.82rem;">61MP · AI AF · 8K RAW</p>
+                        </div>
+                        <div style="text-align:right;">
+                            <div style="font-weight:700; color:var(--alpha-orange); font-size:1.1rem; margin-bottom:8px;">$3,899</div>
+                            <button class="btn-primary" style="padding:6px 14px; font-size:0.8rem; width:auto;" onclick="event.stopPropagation(); window.showToast('Added to cart!')">Add to Cart</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="product-card glass-panel" data-prod-type="Cameras" style="border-radius: var(--border-radius-md); overflow: hidden; cursor:pointer;" onclick="window.showToast('Viewing Alpha 7C II details')">
+                    <div style="position:relative; height: 160px; overflow:hidden;">
+                        <img src="https://images.unsplash.com/photo-1495121605193-b116b5b9c5fe?auto=format&fit=crop&w=600&q=80" style="width:100%; height:100%; object-fit:cover;">
+                        <div style="position:absolute; top:10px; left:10px; background:var(--accent-blue); color:white; padding:3px 10px; border-radius:4px; font-size:0.75rem; font-weight:700;">NEW</div>
+                    </div>
+                    <div style="padding: 15px; display:flex; justify-content:space-between; align-items:center;">
+                        <div>
+                            <h3 style="font-size:1.15rem; margin-bottom:4px;">Alpha 7C II</h3>
+                            <p style="color:var(--text-secondary); font-size:0.82rem;">33MP · Compact Full-Frame</p>
+                        </div>
+                        <div style="text-align:right;">
+                            <div style="font-weight:700; color:var(--alpha-orange); font-size:1.1rem; margin-bottom:8px;">$2,499</div>
+                            <button class="btn-primary" style="padding:6px 14px; font-size:0.8rem; width:auto;" onclick="event.stopPropagation(); window.showToast('Added to cart!')">Add to Cart</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lenses -->
+                <div class="product-card glass-panel" data-prod-type="Lenses" style="display:none; border-radius: var(--border-radius-md); overflow: hidden; cursor:pointer;" onclick="window.showToast('Viewing FE 50mm details')">
+                    <div style="height: 160px; overflow:hidden;">
+                        <img src="https://images.unsplash.com/photo-1617005082133-548c4dd27f35?auto=format&fit=crop&w=600&q=80" style="width:100%; height:100%; object-fit:cover;">
+                    </div>
+                    <div style="padding: 15px; display:flex; justify-content:space-between; align-items:center;">
+                        <div>
+                            <h3 style="font-size:1.15rem; margin-bottom:4px;">FE 50mm F1.2 GM</h3>
+                            <p style="color:var(--text-secondary); font-size:0.82rem;">G Master · Exceptional Bokeh</p>
+                        </div>
+                        <div style="text-align:right;">
+                            <div style="font-weight:700; color:var(--alpha-orange); font-size:1.1rem; margin-bottom:8px;">$1,999</div>
+                            <button class="btn-primary" style="padding:6px 14px; font-size:0.8rem; width:auto;" onclick="event.stopPropagation(); window.showToast('Added to cart!')">Add to Cart</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="product-card glass-panel" data-prod-type="Lenses" style="display:none; border-radius: var(--border-radius-md); overflow: hidden; cursor:pointer;" onclick="window.showToast('Viewing FE 24-70 details')">
+                    <div style="height: 160px; overflow:hidden;">
+                        <img src="https://images.unsplash.com/photo-1502982720700-bfff97f2ecac?auto=format&fit=crop&w=600&q=80" style="width:100%; height:100%; object-fit:cover;">
+                    </div>
+                    <div style="padding: 15px; display:flex; justify-content:space-between; align-items:center;">
+                        <div>
+                            <h3 style="font-size:1.15rem; margin-bottom:4px;">FE 24-70mm F2.8 GM II</h3>
+                            <p style="color:var(--text-secondary); font-size:0.82rem;">Versatile Workhorse Zoom</p>
+                        </div>
+                        <div style="text-align:right;">
+                            <div style="font-weight:700; color:var(--alpha-orange); font-size:1.1rem; margin-bottom:8px;">$2,299</div>
+                            <button class="btn-primary" style="padding:6px 14px; font-size:0.8rem; width:auto;" onclick="event.stopPropagation(); window.showToast('Added to cart!')">Add to Cart</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cinema -->
+                <div class="product-card glass-panel" data-prod-type="Cinema" style="display:none; border-radius: var(--border-radius-md); overflow: hidden; cursor:pointer;" onclick="window.showToast('Viewing FX3 details')">
+                    <div style="position:relative; height: 160px; overflow:hidden;">
+                        <img src="https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?auto=format&fit=crop&w=600&q=80" style="width:100%; height:100%; object-fit:cover;">
+                        <div style="position:absolute; top:10px; left:10px; background:#8B5CF6; color:white; padding:3px 10px; border-radius:4px; font-size:0.75rem; font-weight:700;">CINEMA</div>
+                    </div>
+                    <div style="padding: 15px; display:flex; justify-content:space-between; align-items:center;">
+                        <div>
+                            <h3 style="font-size:1.15rem; margin-bottom:4px;">Sony FX3</h3>
+                            <p style="color:var(--text-secondary); font-size:0.82rem;">Full-Frame Cinema · 4K 120fps</p>
+                        </div>
+                        <div style="text-align:right;">
+                            <div style="font-weight:700; color:var(--alpha-orange); font-size:1.1rem; margin-bottom:8px;">$3,799</div>
+                            <button class="btn-primary" style="padding:6px 14px; font-size:0.8rem; width:auto;" onclick="event.stopPropagation(); window.showToast('Added to cart!')">Add to Cart</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Accessories -->
+                <div class="product-card glass-panel" data-prod-type="Accessories" style="display:none; border-radius: var(--border-radius-md); overflow: hidden; cursor:pointer;" onclick="window.showToast('Viewing CFexpress card details')">
+                    <div style="height: 160px; overflow:hidden;">
+                        <img src="https://images.unsplash.com/photo-1531297484001-80022131f5a1?auto=format&fit=crop&w=600&q=80" style="width:100%; height:100%; object-fit:cover;">
+                    </div>
+                    <div style="padding: 15px; display:flex; justify-content:space-between; align-items:center;">
+                        <div>
+                            <h3 style="font-size:1.15rem; margin-bottom:4px;">CFexpress Type A Card</h3>
+                            <p style="color:var(--text-secondary); font-size:0.82rem;">800MB/s · 160GB</p>
+                        </div>
+                        <div style="text-align:right;">
+                            <div style="font-weight:700; color:var(--alpha-orange); font-size:1.1rem; margin-bottom:8px;">$199</div>
+                            <button class="btn-primary" style="padding:6px 14px; font-size:0.8rem; width:auto;" onclick="event.stopPropagation(); window.showToast('Added to cart!')">Add to Cart</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <!-- STORE LOCATOR -->
+    <template id="tpl-store-locator">
+        <div class="view-page fade-in" style="padding-bottom: 120px;">
+            <div style="position: relative; height: 300px; background: url('https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&w=800&q=80') center/cover;">
+                <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(to bottom, transparent, var(--bg-dark));"></div>
+                <div style="position: absolute; bottom: 20px; left: 20px; right: 20px;">
+                    <input type="text" id="store-search" class="glass-input" placeholder="Search city or zip code..." style="width: 100%; padding: 15px; border-radius: var(--border-radius-pill);">
+                </div>
+            </div>
+            <div style="padding: 20px;">
+                <h3 style="margin-bottom: 15px;">Nearby Sony Centers</h3>
+                <div id="store-loading" class="hidden" style="text-align:center; padding:20px; color:var(--alpha-orange);">Searching...</div>
+                <div id="store-results">
+                    <div class="glass-panel" style="padding: 15px; border-radius: var(--border-radius-md); margin-bottom: 15px;">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
+                            <div>
+                                <div style="font-weight: 600; font-size: 1.1rem;">Sony Center Downtown</div>
+                                <div style="color: var(--text-secondary); font-size: 0.85rem;">1.2 miles away</div>
+                            </div>
+                            <div style="color: var(--success-green, #4CAF50); font-weight: 600; font-size: 0.85rem;">Open</div>
+                        </div>
+                        <div style="display: flex; gap: 10px;">
+                            <button class="btn-secondary glass-btn" style="flex: 1; padding: 8px;" onclick="window.showToast('Opening Maps for Directions...')">Directions</button>
+                            <button class="btn-secondary glass-btn" style="flex: 1; padding: 8px;" onclick="window.showToast('Calling Store: 555-0192...')">Call</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <!-- SETTINGS -->
+    <template id="tpl-settings">
+        <div class="view-page fade-in" style="padding-bottom: 120px;">
+            <div class="page-header glass-panel" style="margin-top: 10px;">
+                <h2>Settings</h2>
+            </div>
+            <div style="padding: 0 20px 20px;">
+                <h3 style="color: var(--text-secondary); font-size: 0.9rem; margin: 20px 0 10px; text-transform: uppercase;">Account</h3>
+                <div class="glass-panel" style="border-radius: var(--border-radius-md); overflow: hidden;">
+                    <div style="padding: 15px 20px; display: flex; justify-content: space-between; border-bottom: 1px solid var(--glass-border); cursor: pointer;" onclick="window.showToast('Edit Profile Details')">
+                        <span>Personal Information</span>
+                        <span class="material-symbols-outlined" style="color: var(--text-secondary);">chevron_right</span>
+                    </div>
+                    <div style="padding: 15px 20px; display: flex; justify-content: space-between; cursor: pointer;" onclick="window.showToast('Manage Subscriptions')">
+                        <span>Subscription</span>
+                        <span class="material-symbols-outlined" style="color: var(--text-secondary);">chevron_right</span>
+                    </div>
+                </div>
+
+                <h3 style="color: var(--text-secondary); font-size: 0.9rem; margin: 30px 0 10px; text-transform: uppercase;">Preferences</h3>
+                <div class="glass-panel" style="border-radius: var(--border-radius-md); overflow: hidden;">
+                    <div style="padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--glass-border); cursor: pointer;" onclick="window.showToast('Toggled Push Notifications')">
+                        <span>Push Notifications</span>
+                        <span class="material-symbols-outlined" style="color: var(--alpha-orange);">toggle_on</span>
+                    </div>
+                    <div style="padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--glass-border); cursor: pointer;" onclick="window.showToast('Theme toggle clicked')">
+                        <span>Dark Theme</span>
+                        <span class="material-symbols-outlined" style="color: var(--alpha-orange);">toggle_on</span>
+                    </div>
+                    <div id="settings-fab-toggle" style="padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; cursor: pointer;">
+                        <div>
+                            <div style="font-weight: 500;">Floating Button</div>
+                            <div style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 2px;">Draggable upload shortcut</div>
+                        </div>
+                        <span class="material-symbols-outlined" id="settings-fab-toggle-icon" style="color: var(--alpha-orange); font-size: 2rem;">toggle_on</span>
+                    </div>
+                </div>
+
+                <button class="glass-panel" style="width: 100%; padding: 15px; border-radius: var(--border-radius-md); margin-top: 30px; color: var(--error-red); font-weight: 600; text-align: center; border: 1px solid var(--error-red); cursor:pointer;" onclick="window.showToast('Logging out...'); setTimeout(() => window.location.reload(), 1000);">
+                    Log Out
+                </button>
+            </div>
+        </div>
+    </template>
+
+    <script src="app.js"></script>
+</body>
+</html>
